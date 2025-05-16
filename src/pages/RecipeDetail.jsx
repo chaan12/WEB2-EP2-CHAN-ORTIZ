@@ -36,7 +36,7 @@ export default function RecipeDetail() {
       const saved = localStorage.getItem(storageKey);
       const removed = saved ? JSON.parse(saved) : [];
       setRemovedIngredients(removed);
-      setIngredients(list.filter(item => !removed.includes(item)));
+      setIngredients(list.filter((item) => !removed.includes(item)));
     }
   }, [meal, storageKey]);
 
@@ -44,24 +44,22 @@ export default function RecipeDetail() {
     const newRemoved = [...removedIngredients, ingToRemove];
     setRemovedIngredients(newRemoved);
     localStorage.setItem(storageKey, JSON.stringify(newRemoved));
-    setIngredients(prev => prev.filter(item => item !== ingToRemove));
+    setIngredients((prev) => prev.filter((item) => item !== ingToRemove));
     setShowAll(false);
   };
 
   const addIngredient = (ingToAdd) => {
-    const newRemoved = removedIngredients.filter(item => item !== ingToAdd);
+    const newRemoved = removedIngredients.filter((item) => item !== ingToAdd);
     setRemovedIngredients(newRemoved);
     localStorage.setItem(storageKey, JSON.stringify(newRemoved));
-    setIngredients(prev => [...prev, ingToAdd]);
+    setIngredients((prev) => [...prev, ingToAdd]);
   };
 
   if (loading) return <p className="center">Cargando receta…</p>;
   if (error) return <p className="center">Error: {error.message}</p>;
 
-  // Determine which ingredients to show on mobile
-  const displayedIngredients = isMobile && !showAll
-    ? ingredients.slice(0, 3)
-    : ingredients;
+  const displayedIngredients =
+    isMobile && !showAll ? ingredients.slice(0, 3) : ingredients;
 
   return (
     <div className="recipe-wrapper">
@@ -72,8 +70,12 @@ export default function RecipeDetail() {
       <header className="recipe-header">
         <h1 className="recipe-title">{meal.strMeal}</h1>
         <div className="recipe-info">
-          <span><strong>ID:</strong> {meal.idMeal}</span>
-          <span><strong>Categoría:</strong> {meal.strCategory}</span>
+          <span>
+            <strong>ID:</strong> {meal.idMeal}
+          </span>
+          <span>
+            <strong>Categoría:</strong> {meal.strCategory}
+          </span>
         </div>
       </header>
 
@@ -87,9 +89,9 @@ export default function RecipeDetail() {
             <h2>Ingredientes</h2>
             <button
               className="btn-show-removed"
-              onClick={() => setShowRemoved(prev => !prev)}
+              onClick={() => setShowRemoved((prev) => !prev)}
             >
-              {showRemoved ? 'Ocultar eliminados' : 'Mostrar eliminados'}
+              {showRemoved ? "Ocultar eliminados" : "Mostrar eliminados"}
             </button>
           </div>
           <ul className="ingredients-list">
@@ -115,7 +117,10 @@ export default function RecipeDetail() {
               {removedIngredients.map((ing, idx) => (
                 <li key={idx}>
                   {ing}
-                  <button onClick={() => addIngredient(ing)} className="btn-add">
+                  <button
+                    onClick={() => addIngredient(ing)}
+                    className="btn-add"
+                  >
                     Agregar
                   </button>
                 </li>
@@ -128,20 +133,45 @@ export default function RecipeDetail() {
       <section className="instructions-section full-width">
         <h2>Instrucciones</h2>
         <ol>
-          {meal.strInstructions.split(". ").map((step, i) =>
-            step.trim() ? <li key={i}>{step.trim()}.</li> : null
-          )}
+          {meal.strInstructions
+            .split(". ")
+            .map((step, i) =>
+              step.trim() ? <li key={i}>{step.trim()}.</li> : null
+            )}
         </ol>
       </section>
 
+      {meal.strYoutube && (
+        <section className="video-preview">
+          <iframe
+            width="100%"
+            height="400"
+            src={meal.strYoutube.replace("watch?v=", "embed/")}
+            title="Video del platillo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </section>
+      )}
+
       <footer className="recipe-footer">
         {meal.strYoutube && (
-          <a href={meal.strYoutube} className="btn-link" target="_blank" rel="noopener noreferrer">
+          <a
+            href={meal.strYoutube}
+            className="btn-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Canal de YouTube
           </a>
         )}
         {meal.strSource && (
-          <a href={meal.strSource} className="btn-link" target="_blank" rel="noopener noreferrer">
+          <a
+            href={meal.strSource}
+            className="btn-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Página Web
           </a>
         )}
